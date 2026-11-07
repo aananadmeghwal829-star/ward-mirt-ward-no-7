@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>वार्ड 7 | पूजा देवी मेघवाल</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7f3;color:#24352b;line-height:1.7}
+header{background:#176b43;color:white;text-align:center;padding:35px 15px;border-bottom:6px solid #ed9634}
+header h1{font-size:32px;margin:10px 0}
+.tag{border:1px solid white;border-radius:20px;padding:5px 14px}
+main{max-width:850px;margin:auto;padding:15px}
+.card{background:white;padding:22px;margin:18px 0;border-radius:14px;box-shadow:0 3px 12px #0001}
+h2{color:#176b43;margin-top:0}
+.hero{text-align:center}
+.avatar{font-size:65px}
+.name{font-size:27px;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.item{background:#edf6ef;padding:15px;border-radius:10px}
+.item b{color:#176b43;font-size:18px}
+label{display:block;font-weight:bold;margin-top:12px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #bbb;border-radius:8px;font-size:16px}
+textarea{height:110px}
+button{background:#176b43;color:white;padding:12px 20px;border:0;border-radius:8px;font-size:16px;margin-top:15px}
+footer{text-align:center;padding:25px;background:#176b43;color:white}
+.note{background:#fff4df;padding:12px;border-left:4px solid #e99432}
+</style>
+</head>
+<body>
+
+<header>
+<div class="tag">जनसेवा · जनसंपर्क · विकास</div>
+<h1>हमारा वार्ड – वार्ड संख्या 7</h1>
+<p>ग्राम पंचायत चाण्डासर, कोलायत, बीकानेर (राजस्थान)</p>
+</header>
+
+<main>
+
+<section class="card hero">
+<div class="avatar">🏛️</div>
+<h2>आपकी वार्ड पंच</h2>
+<div class="name">पूजा देवी मेघवाल</div>
+<p>पत्नी श्री राजूराम मेघवाल</p>
+<p><b>वार्ड संख्या 7</b></p>
+<p>वार्ड के विकास, जनसमस्याओं और जनहित के सुझावों के लिए सूचना पोर्टल।</p>
+</section>
+
+<section class="card">
+<h2>हमारे वार्ड की प्राथमिकताएँ</h2>
+<div class="grid">
+<div class="item"><b>💧 पेयजल</b><br>पानी और पाइपलाइन संबंधी समस्याएँ।</div>
+<div class="item"><b>🛣️ सड़क</b><br>गलियों और रास्तों का विकास।</div>
+<div class="item"><b>💡 बिजली</b><br>स्ट्रीट लाइट संबंधी समस्याएँ।</div>
+<div class="item"><b>🧹 सफाई</b><br>नाली, सफाई और कचरा प्रबंधन।</div>
+<div class="item"><b>🌳 पार्क</b><br>अंबेडकर पार्क एवं सार्वजनिक स्थानों का विकास।</div>
+<div class="item"><b>🏘️ जनसुविधाएँ</b><br>वार्ड की अन्य मूलभूत सुविधाएँ।</div>
+</div>
+</section>
+
+<section class="card">
+<h2>वार्ड के विकास कार्य</h2>
+<p>इस भाग में वार्ड संख्या 7 में होने वाले और पूरे किए गए विकास कार्यों की जानकारी जोड़ी जाएगी।</p>
+<ul>
+<li>प्रस्तावित विकास कार्य</li>
+<li>चल रहे विकास कार्य</li>
+<li>पूर्ण हो चुके विकास कार्य</li>
+</ul>
+<p class="note">कार्य की स्थिति संबंधित विभाग से पुष्टि के बाद ही प्रकाशित की जाएगी।</p>
+</section>
+
+<section class="card">
+<h2>अपनी समस्या या सुझाव लिखें</h2>
+<label>समस्या का विषय</label>
+<select id="topic">
+<option>पेयजल</option>
+<option>सड़क एवं रास्ता</option>
+<option>बिजली एवं लाइट</option>
+<option>नाली एवं सफाई</option>
+<option>अंबेडकर पार्क</option>
+<option>अन्य</option>
+</select>
+<label>स्थान</label>
+<input id="place" placeholder="अपनी गली या मोहल्ला लिखें">
+<label>समस्या का विवरण</label>
+<textarea id="detail" placeholder="अपनी समस्या लिखें"></textarea>
+<button onclick="copyIssue()">समस्या का विवरण कॉपी करें</button>
+<p id="msg"></p>
+<p class="note">यह फॉर्म अभी शिकायत सरकारी कार्यालय में जमा नहीं करता। विवरण कॉपी करके संबंधित कार्यालय में आवेदन दें।</p>
+</section>
+
+<section class="card">
+<h2>हमारा उद्देश्य</h2>
+<p>वार्ड के नागरिकों तक आवश्यक जानकारी पहुँचाना, जनसमस्याओं को समझना और पंचायत एवं संबंधित विभागों के समक्ष जनहित के विषय रखना हमारा उद्देश्य है।</p>
+</section>
+
+<section class="card">
+<h2>संपर्क एवं जानकारी</h2>
+<p><b>जनप्रतिनिधि:</b> पूजा देवी मेघवाल</p>
+<p><b>पद:</b> वार्ड पंच, वार्ड संख्या 7</p>
+<p><b>ग्राम पंचायत:</b> चाण्डासर</p>
+<p><b>पंचायत समिति:</b> कोलायत</p>
+<p><b>जिला:</b> बीकानेर, राजस्थान</p>
+</section>
+
+</main>
+
+<footer>
+<h3>वार्ड संख्या 7 – जनसेवा हमारा संकल्प</h3>
+<p>पूजा देवी मेघवाल | वार्ड पंच</p>
+<p>ग्राम पंचायत चाण्डासर, बीकानेर</p>
+</footer>
+
+<script>
+function copyIssue(){
+let t="विषय: "+document.getElementById("topic").value+
+"\nस्थान: "+document.getElementById("place").value+
+"\nसमस्या: "+document.getElementById("detail").value;
+if(!document.getElementById("place").value || !document.getElementById("detail").value){
+document.getElementById("msg").innerText="कृपया स्थान और समस्या का विवरण भरें।";
+return;
+}
+if(navigator.clipboard){
+navigator.clipboard.writeText(t).then(()=>document.getElementById("msg").innerText="विवरण कॉपी हो गया।");
+}else{
+document.getElementById("msg").innerText=t;
+}
+}
+</script>
+
+</body>
+</html>
