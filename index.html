@@ -110,9 +110,6 @@ footer{text-align:center;padding:25px;background:#176b43;color:white}
 <p>पूजा देवी मेघवाल | वार्ड पंच</p>
 <p>ग्राम पंचायत चाण्डासर, बीकानेर</p>
 </footer>
-
-<script>
-
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
@@ -151,7 +148,7 @@ async function copyIssue() {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    msg.innerText = "शिकायत जमा हुई। शिकायत नंबर: " +
+    msg.innerText = "शिकायत सफलतापूर्वक जमा हो गई! शिकायत नंबर: " +
       docRef.id.slice(-8).toUpperCase();
 
   } catch (error) {
@@ -160,9 +157,3 @@ async function copyIssue() {
   }
 }
 </script>
-  
-
-</script>
-
-</body>
-</html>
