@@ -112,20 +112,56 @@ footer{text-align:center;padding:25px;background:#176b43;color:white}
 </footer>
 
 <script>
-function copyIssue(){
-let t="विषय: "+document.getElementById("topic").value+
-"\nस्थान: "+document.getElementById("place").value+
-"\nसमस्या: "+document.getElementById("detail").value;
-if(!document.getElementById("place").value || !document.getElementById("detail").value){
-document.getElementById("msg").innerText="कृपया स्थान और समस्या का विवरण भरें।";
-return;
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDPBIOhjkdvtNBB4YjX_C2N8buMQiVqFu4",
+  authDomain: "ward7-complaints.firebaseapp.com",
+  projectId: "ward7-complaints",
+  storageBucket: "ward7-complaints.firebasestorage.app",
+  messagingSenderId: "880344944088",
+  appId: "1:880344944088:web:c67daf953d5a097187f6ad"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+async function copyIssue() {
+  const topic = document.getElementById("topic").value.trim();
+  const place = document.getElementById("place").value.trim();
+  const detail = document.getElementById("detail").value.trim();
+  const msg = document.getElementById("msg");
+
+  if (!topic || !place || !detail) {
+    msg.innerText = "कृपया सभी जानकारी भरें।";
+    return;
+  }
+
+  msg.innerText = "शिकायत जमा हो रही है...";
+
+  try {
+    const docRef = await db.collection("complaints").add({
+      topic,
+      place,
+      detail,
+      status: "नई",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    msg.innerText = "शिकायत जमा हुई। शिकायत नंबर: " +
+      docRef.id.slice(-8).toUpperCase();
+
+  } catch (error) {
+    console.error(error);
+    msg.innerText = "शिकायत जमा नहीं हुई। कृपया दोबारा प्रयास करें।";
+  }
 }
-if(navigator.clipboard){
-navigator.clipboard.writeText(t).then(()=>document.getElementById("msg").innerText="विवरण कॉपी हो गया।");
-}else{
-document.getElementById("msg").innerText=t;
-}
-}
+</script>
+  
+
 </script>
 
 </body>
