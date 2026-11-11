@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>वार्ड 7 Admin Panel</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f7f3;font-family:Arial,sans-serif;color:#24352b}
+header{background:#176b43;color:white;text-align:center;padding:22px}
+main{max-width:800px;margin:auto;padding:15px}
+.card{background:white;padding:20px;margin:16px 0;border-radius:12px;box-shadow:0 2px 10px #0001}
+h2{color:#176b43}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #bbb;border-radius:7px;font-size:16px}
+button{background:#176b43;color:white;padding:12px 18px;border:0;border-radius:7px;margin:7px 0;font-size:15px}
+.logout{background:#a83232}
+.complaint{border:1px solid #ddd;border-radius:9px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
+.small{color:#666;font-size:14px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+<h2 style="color:white">वार्ड 7 – Admin Panel</h2>
+<p>पूजा देवी मेघवाल | वार्ड पंच</p>
+</header>
+
+<main>
+<section class="card" id="loginBox">
+<h2>व्यवस्थापक लॉगिन</h2>
+<input id="email" type="email" placeholder="Admin ईमेल">
+<input id="password" type="password" placeholder="पासवर्ड">
+<button id="loginBtn" onclick="login()">लॉगिन करें</button>
+<p id="loginMsg"></p>
+</section>
+
+<section class="card hidden" id="panel">
+<h2>शिकायत प्रबंधन</h2>
+<p id="welcome"></p>
+<button onclick="loadComplaints()">शिकायतें Refresh करें</button>
+<button class="logout" onclick="logout()">लॉगआउट</button>
+<p id="listMsg"></p>
+<div id="complaintsList"></div>
+</section>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDPBIOhjkdvtNBB4YjX_C2N8buMQiVqFu4",
+  authDomain: "ward7-complaints.firebaseapp.com",
+  projectId: "ward7-complaints",
+  storageBucket: "ward7-complaints.firebasestorage.app",
+  messagingSenderId: "880344944088",
+  appId: "1:880344944088:web:c67daf953d5a097187f6ad"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+auth.onAuthStateChanged(user => {
+  document.getElementById("loginBox").classList.toggle("hidden",!!user);
+  document.getElementById("panel").classList.toggle("hidden",!user);
+
+  if(user){
+    document.getElementById("welcome").innerText="लॉगिन सफल: "+user.email;
+    loadComplaints();
+  }
+});
+
+async function login(){
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+  const msg=document.getElementById("loginMsg");
+  const btn=document.getElementById("loginBtn");
+
+  if(!email || !password){
+    msg.innerText="ईमेल और पासवर्ड भरें।";
+    return;
+  }
+
+  btn.disabled=true;
+  msg.innerText="लॉगिन हो रहा है...";
+
+  try{
+    await auth.signInWithEmailAndPassword(email,password);
+    msg.innerText="लॉगिन सफल।";
+  }catch(error){
+    console.error(error);
+    msg.innerText="लॉगिन नहीं हुआ। ईमेल और पासवर्ड जाँचें।";
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+async function loadComplaints(){
+  const list=document.getElementById("complaintsList");
+  const msg=document.getElementById("listMsg");
+  list.innerHTML="";
+  msg.innerText="शिकायतें लोड हो रही हैं...";
+
+  try{
+    const snapshot=await db.collection("complaints")
+      .orderBy("createdAt","desc").get();
+
+    if(snapshot.empty){
+      msg.innerText="अभी कोई शिकायत उपलब्ध नहीं है।";
+      return;
+    }
+
+    msg.innerText="कुल शिकायतें: "+snapshot.size;
+
+    snapshot.forEach(doc=>{
+      const c=doc.data();
+      const div=document.createElement("div");
+      div.className="complaint";
+
+      const title=document.createElement("h3");
+      title.textContent=c.topic || "शिकायत";
+
+      const details=document.createElement("p");
+      details.textContent="शिकायत नंबर: "+(c.trackingCode || "उपलब्ध नहीं")+
+        "\nनाम: "+(c.name || "")+
+        "\nमोबाइल: "+(c.mobile || "")+
+        "\nस्थान: "+(c.place || "")+
+        "\nविवरण: "+(c.detail || "");
+
+      const status=document.createElement("p");
+      status.textContent="वर्तमान स्थिति: "+(c.status || "");
+
+      const select=document.createElement("select");
+      [
+        "नई शिकायत",
+        "जाँच जारी",
+        "संबंधित विभाग को प्रस्तुत",
+        "कार्य प्रगति पर",
+        "समाधान हो गया"
+      ].forEach(value=>{
+        const option=document.createElement("option");
+        option.value=value;
+        option.textContent=value;
+        if(value===c.status) option.selected=true;
+        select.appendChild(option);
+      });
+
+      const button=document.createElement("button");
+      button.textContent="स्थिति अपडेट करें";
+      button.onclick=()=>updateStatus(doc.id,c.trackingCode,select.value,button);
+
+      div.append(title,details,status,select,button);
+      list.appendChild(div);
+    });
+
+  }catch(error){
+    console.error(error);
+    msg.innerText="शिकायतें नहीं खुलीं। सुरक्षा नियम जाँचें।";
+  }
+}
+
+async function updateStatus(id,code,status,button){
+  button.disabled=true;
+
+  try{
+    const batch=db.batch();
+
+    batch.update(db.collection("complaints").doc(id),{
+      status:status
+    });
+
+    batch.update(db.collection("tracking").doc(code),{
+      status:status
+    });
+
+    await batch.commit();
+    alert("शिकायत की स्थिति अपडेट हो गई।");
+    loadComplaints();
+
+  }catch(error){
+    console.error(error);
+    alert("अपडेट नहीं हुआ। कृपया दोबारा प्रयास करें।");
+  }finally{
+    button.disabled=false;
+  }
+}
+
+async function logout(){
+  await auth.signOut();
+}
+</script>
+</body>
+</html>
